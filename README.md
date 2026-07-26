@@ -380,7 +380,396 @@ Future enhancements for this project include:
 
 ### Connect with Me
 
-- **GitHub:** https://github.com/your-github-username
+- **GitHub:** # 🛒 SQL Retail Sales Analysis
+
+## 📌 Project Overview
+
+This project analyzes a retail sales dataset using **PostgreSQL**. It demonstrates the complete data analysis workflow, including data cleaning, data exploration, and business analysis using SQL.
+
+The main objective of this project is to extract meaningful business insights from retail transaction data while showcasing practical SQL skills commonly used in Data Analyst roles.
+
+---
+
+## 🎯 Project Objectives
+
+- Clean and prepare raw retail sales data.
+- Explore the dataset to understand customer and sales trends.
+- Solve real-world business problems using SQL.
+- Practice PostgreSQL concepts including Aggregate Functions, Window Functions, CTEs, Date Functions, and Conditional Logic.
+- Generate insights that support business decision-making.
+
+---
+
+## 🗄 Database
+
+**PostgreSQL**
+
+---
+
+## 📊 Dataset Information
+
+The dataset contains retail transaction records with the following columns.
+
+| Column | Description |
+|----------|-------------|
+| transactions_id | Unique Transaction ID |
+| sale_date | Date of Sale |
+| sale_time | Time of Sale |
+| customer_id | Customer ID |
+| gender | Customer Gender |
+| age | Customer Age |
+| category | Product Category |
+| quantity | Quantity Purchased |
+| price_per_unit | Price Per Unit |
+| cogs | Cost of Goods Sold |
+| total_sale | Total Sale Amount |
+
+---
+
+# 🛠 SQL Concepts Used
+
+- CREATE DATABASE
+- CREATE TABLE
+- SELECT
+- WHERE
+- GROUP BY
+- ORDER BY
+- Aggregate Functions
+- COUNT()
+- SUM()
+- AVG()
+- DISTINCT
+- DELETE
+- CASE WHEN
+- Common Table Expressions (CTE)
+- Window Functions (RANK)
+- EXTRACT()
+- TO_CHAR()
+- LIMIT
+
+---
+
+# 🧹 Data Cleaning
+
+The following data cleaning steps were performed:
+
+- Checked total number of records.
+- Identified NULL values.
+- Removed rows containing NULL values.
+- Validated cleaned dataset before analysis.
+
+---
+
+# 📈 Data Exploration
+
+Performed exploratory analysis including:
+
+- Total number of sales
+- Number of unique customers
+- Product categories available
+- Data validation after cleaning
+
+---
+
+# 📊 Business Questions & SQL Queries
+
+## Q1. Retrieve all sales made on **2022-11-05**
+
+```sql
+SELECT *
+FROM RETAIL_SALES
+WHERE sale_date = '2022-11-05';
+```
+
+---
+
+## Q2. Retrieve all Clothing transactions where quantity sold is greater than or equal to 4 during November 2022
+
+```sql
+SELECT *
+FROM RETAIL_SALES
+WHERE category = 'Clothing'
+AND TO_CHAR(sale_date,'YYYY-MM')='2022-11'
+AND quantity >=4;
+```
+
+---
+
+## Q3. Calculate total sales for each product category
+
+```sql
+SELECT
+category,
+SUM(total_sale) AS total_sales,
+COUNT(*) AS total_orders
+FROM RETAIL_SALES
+GROUP BY category;
+```
+
+---
+
+## Q4. Find the average age of customers who purchased Beauty products
+
+```sql
+SELECT
+ROUND(AVG(age),2) AS average_age
+FROM RETAIL_SALES
+WHERE category='Beauty';
+```
+
+---
+
+## Q5. Retrieve all transactions where total sale is greater than 1000
+
+```sql
+SELECT *
+FROM RETAIL_SALES
+WHERE total_sale >1000;
+```
+
+---
+
+## Q6. Find the total number of transactions made by each gender in each category
+
+```sql
+SELECT
+category,
+gender,
+COUNT(*) AS total_transactions
+FROM RETAIL_SALES
+GROUP BY category,gender
+ORDER BY category;
+```
+
+---
+
+## Q7. Find the best-selling month in each year based on average sales
+
+```sql
+SELECT
+year,
+month,
+avg_sale
+FROM
+(
+SELECT
+EXTRACT(YEAR FROM sale_date) AS year,
+EXTRACT(MONTH FROM sale_date) AS month,
+AVG(total_sale) AS avg_sale,
+RANK() OVER(
+PARTITION BY EXTRACT(YEAR FROM sale_date)
+ORDER BY AVG(total_sale) DESC
+) AS rank
+FROM RETAIL_SALES
+GROUP BY 1,2
+)t
+WHERE rank=1;
+```
+
+---
+
+## Q8. Find the Top 5 customers based on highest total sales
+
+```sql
+SELECT
+customer_id,
+SUM(total_sale) AS total_sales
+FROM RETAIL_SALES
+GROUP BY customer_id
+ORDER BY total_sales DESC
+LIMIT 5;
+```
+
+---
+
+## Q9. Find the number of unique customers who purchased items from each category
+
+```sql
+SELECT
+category,
+COUNT(DISTINCT customer_id) AS unique_customers
+FROM RETAIL_SALES
+GROUP BY category;
+```
+
+---
+
+## Q10. Create Morning, Afternoon and Night shifts based on sale time
+
+```sql
+WITH hourly_sale AS
+(
+SELECT *,
+CASE
+WHEN EXTRACT(HOUR FROM sale_time)<12 THEN 'Morning'
+WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+ELSE 'Night'
+END AS shift
+FROM RETAIL_SALES
+)
+
+SELECT
+shift,
+COUNT(*) AS total_orders
+FROM hourly_sale
+GROUP BY shift;
+```
+
+---
+
+## Q11. Find total quantity sold for each product category
+
+```sql
+SELECT
+category,
+SUM(quantity) AS total_quantity
+FROM RETAIL_SALES
+GROUP BY category;
+```
+
+---
+
+## Q12. Count total Male and Female customers
+
+```sql
+SELECT
+gender,
+COUNT(*) AS total_customers
+FROM RETAIL_SALES
+GROUP BY gender;
+```
+
+---
+
+## Q13. Calculate total sales generated by each gender
+
+```sql
+SELECT
+gender,
+SUM(total_sale) AS total_sales
+FROM RETAIL_SALES
+GROUP BY gender;
+```
+
+---
+
+# 🔍 Key Findings
+
+- The dataset contains transactions across multiple product categories such as **Clothing**, **Beauty**, and **Electronics**.
+- Customer purchasing behavior varies across different categories.
+- Several transactions generated sales greater than **1000**, indicating high-value purchases.
+- Monthly sales analysis identified the best-performing month in each year.
+- The Top 5 customers contributed significantly to total revenue.
+- Customer purchasing patterns differ by gender.
+- Product categories have different numbers of unique customers.
+- Morning, Afternoon, and Night shift analysis revealed peak shopping hours.
+- Total quantity sold varies by category, indicating product demand.
+- Category-wise sales analysis helps identify high-performing products.
+- Beauty category analysis provided customer age insights.
+- Gender-wise sales analysis highlights customer purchasing trends.
+
+---
+
+# 📈 Business Impact
+
+This analysis can help businesses:
+
+- Identify top-performing product categories.
+- Understand customer buying behavior.
+- Improve inventory planning.
+- Increase revenue by targeting high-value customers.
+- Optimize marketing campaigns.
+- Improve workforce planning based on shopping hours.
+- Support data-driven business decisions.
+
+---
+
+# 📚 Skills Demonstrated
+
+- SQL
+- PostgreSQL
+- Data Cleaning
+- Data Exploration
+- Business Analysis
+- Aggregate Functions
+- Window Functions
+- CTE (Common Table Expressions)
+- Date & Time Functions
+- Customer Analytics
+- Sales Analysis
+
+---
+
+# 📂 Project Structure
+
+```
+SQL-Retail-Sales-Analysis
+│
+├── SQL_Project.sql
+├── Retail_Sales_Dataset.csv
+├── README.md
+└── images
+    ├── q1_result.png
+    ├── q2_result.png
+    ├── ...
+    └── q13_result.png
+```
+
+---
+
+# 🎯 Learning Outcomes
+
+Through this project, I learned how to:
+
+- Clean real-world datasets using SQL.
+- Perform Exploratory Data Analysis (EDA).
+- Solve business problems using SQL queries.
+- Use Aggregate Functions and Window Functions.
+- Work with Date & Time functions.
+- Analyze customer purchasing behavior.
+- Write efficient and readable SQL queries.
+- Build an end-to-end SQL project for a professional portfolio.
+
+---
+
+# 🚀 Future Improvements
+
+Future enhancements for this project include:
+
+- Build an interactive Power BI Dashboard.
+- Create SQL Views for reporting.
+- Add Stored Procedures.
+- Improve query performance using Indexes.
+- Perform Customer Segmentation.
+- Build Sales Forecasting using Python.
+
+---
+
+# 👨‍💻 Author
+
+**Ayyan Chiplunkar**
+
+**Aspiring Data Analyst**
+
+### Skills
+
+- SQL
+- PostgreSQL
+- Power BI
+- Microsoft Excel
+- Python (Basic)
+
+### Connect with Me
+
+- **GitHub:** https://github.com/ayyanchiplunkar
+- **LinkedIn:** https://www.linkedin.com/in/ayyan04
+---
+
+# ⭐ Support
+
+If you found this project helpful, please consider giving this repository a **Star ⭐**.
+
+Thank you for visiting this project!
 - **LinkedIn:** https://linkedin.com/in/your-linkedin-profile
 
 ---
