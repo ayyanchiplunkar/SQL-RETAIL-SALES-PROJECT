@@ -770,7 +770,7 @@ Future enhancements for this project include:
 If you found this project helpful, please consider giving this repository a **Star ⭐**.
 
 Thank you for visiting this project!
-- **LinkedIn:** https://linkedin.com/in/your-linkedin-profile
+- **LinkedIn:** https://www.linkedin.com/in/ayyan04
 
 ---
 
